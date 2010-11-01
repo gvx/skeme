@@ -1,0 +1,106 @@
+#!/usr/bin/env python 
+from libskeme import *
+import sys
+from optparse import OptionParser
+
+parser = OptionParser()
+
+parser.add_option('-a', '--arrow', action='store_true',
+		default=False,
+		help='Adds arrows for functions with a return value')
+parser.add_option('-c', '--curve', action='store_true',
+		default=False,
+		help='Curves lines pointing to parent functions')
+parser.add_option('-w', '--width', type='int',
+		default=None,
+		help='Sets the width of each function box')
+parser.add_option('-e', '--height', type='int',
+		default=None,
+		help='Sets the height of each function box')
+parser.add_option('-H', '--hor-sep', type='int', metavar='SEP',
+		default=None,
+		help='Sets the horizontal separation of each function box')
+parser.add_option('-V', '--vert-sep', type='int', metavar='SEP',
+		default=None,
+		help='Sets the vertical separation of each function box')
+parser.add_option('-x', '--x-offset', type='int', metavar='OFFSET',
+		default=None,
+		help='Sets the horizontal offset the function boxes')
+parser.add_option('-y', '--y-offset', type='int', metavar='OFFSET',
+		default=None,
+		help='Sets the vertical offset the function boxes')
+parser.add_option('--font', metavar='TYPEFACE',
+		default=None,
+		help='Sets the main font')
+parser.add_option('--small-font', metavar='TYPEFACE',
+		default=None,
+		help='Sets the small font')
+parser.add_option('--font-size', type='int', metavar='SIZE',
+		default=None,
+		help='Sets the main font size')
+parser.add_option('--small-font-size', type='int', metavar='SIZE',
+		default=None,
+		help='Sets the small font size')
+parser.add_option('--fg', metavar='COLOR',
+		default=None,
+		help='Sets the foreground color (text, lines) -- hexadecimal, like: ff00e8')
+parser.add_option('--bg', metavar='COLOR',
+		default=None,
+		help='Sets the background color (boxes) -- hexadecimal, like: ff00e8')
+
+try:
+	f = open('sk.layout')
+except IOError:
+	pass
+else:
+	parsed = {}
+	for line in f:
+		line = line.split('#')[0]
+		l = line.split('=')
+		if len(l) == 2:
+			a = l[1].strip()
+			if a.isdigit():
+				a = int(a)
+			if a == 'True':
+				a = True
+			if a == 'False':
+				a = False
+			parsed[l[0].strip()] = a
+	parser.set_defaults(**parsed)
+
+options, args = parser.parse_args()
+
+def splitpairs(text):
+	for i in range(0, len(text), 2):
+		yield text[i:i+2]
+
+r = Renderer(sys.stdin.read())
+
+r.arrows = options.arrow
+r.curving_line = options.curve
+if options.width:
+	r.item_width = options.width
+if options.height:
+	r.item_height = options.height
+if options.hor_sep:
+	r.horizontal_separation = r.item_width + options.hor_sep
+if options.vert_sep:
+	r.vertical_seperation = r.item_height + options.vert_sep
+if options.x_offset:
+	r.x_offset = options.x_offset
+if options.y_offset:
+	r.y_offset = options.y_offset
+if options.font:
+	r.font = options.font
+if options.small_font:
+	r.small_font = options.small_font
+if options.font_size:
+	r.font_size = options.font_size
+if options.small_font_size:
+	r.small_font_size = options.small_font_size
+if options.fg:
+	r.fg = tuple(int(x, 16) / 255.0 for x in splitpairs(options.fg))
+if options.bg:
+	r.bg = tuple(int(x, 16) / 255.0 for x in splitpairs(options.bg))
+
+r.renderto(args and args[0] or sys.stdout)

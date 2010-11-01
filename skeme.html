@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Skeme Web interface</title>
+	</head>
+	<body>
+		<form action="/cgi-bin/webskeme.py" method="POST">
+			<textarea name="content" rows="40" cols="80">- toplevel
+-- subnode (in a) (out b) (inout c) (returns x)</textarea><br />
+			<input type="submit" value="Submit" /><br /><strong>Extra settings:</strong><br />
+			<input type="checkbox" name="arrow" value="arrow" />Use arrows
+			<input type="checkbox" name="curve" value="curve" />Use curved lines<br />
+			Box width: <input type="text" name="width" />
+			Box height: <input type="text" name="height" /><br />
+			Horizontal separation: <input type="text" name="hor-sep" />
+			Vertical separation: <input type="text" name="vert-sep" /><br />
+			x-offset: <input type="text" name="x-off" value="6" />
+			y-offset: <input type="text" name="y-off" value="6" /><br />
+			Font: <select name="font">
+				<option value="">(Default)</option>
+				<option value="serif">Serif</option>
+				<option value="sans">Sans Serif</option>
+				<option value="mono">Monospace</option>
+			</select>
+			Font size: <input type="text" name="font-size" value="12" /><br />
+			Small font: <select name="small-font">
+				<option value="">(Default)</option>
+				<option value="serif">Serif</option>
+				<option value="sans">Sans Serif</option>
+				<option value="mono">Monospace</option>
+			</select>
+			Small font size: <input type="text" name="small-font-size" value="9" /><br />
+			Foreground color: <input type="text" name="fg" value="000000" />
+			Background color: <input type="text" name="bg" value="ffffff" /><br />
+		</form>
+	</body>
+</html>
