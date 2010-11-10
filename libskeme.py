@@ -163,27 +163,16 @@ class Renderer(object):
 				context.set_line_width(.8)
 				context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level))
 				#context.line_to(.5+round(self.x_offset + self.item_width * ex / (len(p.subnodes)+1) + p.x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * (p.level - 1) + self.item_height))
-			if self.curving_line:
-				context.rel_curve_to(0, -round(2*(self.vertical_seperation - self.item_height)/3),
-						round(self.item_width * ex / (len(p.subnodes)+1) - self.item_width / 2.0 + (p.x - x) * self.horizontal_separation), -round((self.vertical_seperation - self.item_height)/3),#-round(self.vertical_seperation / 2 - self.item_height/2),
-						round(self.item_width * ex / (len(p.subnodes)+1) - self.item_width / 2.0 + (p.x - x) * self.horizontal_separation), -round(self.vertical_seperation - self.item_height))
-			else:
-				context.rel_line_to(round(self.item_width * ex / (len(p.subnodes)+1) - self.item_width / 2.0 + (p.x - x) * self.horizontal_separation), -round(self.vertical_seperation - self.item_height))
+			context.rel_line_to(0, -round(self.vertical_seperation - self.item_height) / 2)
 			context.stroke()
 			context.select_font_face(self.small_font,
 				cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 			context.set_font_size(self.small_font_size)
 			if node.returns:
 				if self.arrows:
-					ox, oy = round(self.x_offset + self.item_width * ex / (len(p.subnodes)+1) + p.x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * (p.level - 1) + self.item_height)
-					context.move_to(ox, oy)
-					dx = self.item_width * ex / (len(p.subnodes)+1) - self.item_width / 2.0 + (p.x - x) * self.horizontal_separation
-					dy = self.vertical_seperation - self.item_height
-					angle = math.atan2(dy, dx)
-					if self.curving_line:
-						angle = (angle - .5*math.pi)*.4 + .5*math.pi
-					context.line_to(ox + 10*math.cos(.75*math.pi - angle), oy + 10*math.sin(.75*math.pi - angle))
-					context.line_to(ox + 10*math.cos(1.25*math.pi - angle), oy + 10*math.sin(1.25*math.pi - angle))
+					context.move_to(round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * (level - .5) + self.item_height/2))
+					context.rel_line_to(-7, 7)
+					context.rel_line_to(14, 0)
 					context.fill()
 				x_bearing, y_bearing, width, height = context.text_extents(node.returns)[:4]
 				#l = (x - p.x) * self.horizontal_separation / 10.0
@@ -195,6 +184,17 @@ class Renderer(object):
 				x_bearing, y_bearing, width, height = context.text_extents(arg)[:4]
 				context.move_to(round(self.x_offset + self.item_width + x * self.horizontal_separation - x_bearing - width), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 - i * (height + 1) + 1))
 				context.show_text(arg)
+			siblings = node.parent.subnodes
+			if siblings.index(node) == len(siblings) - 1:
+				context.set_line_width(.8)
+				context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + siblings[0].x * self.horizontal_separation), .5+round(self.y_offset + self.vertical_seperation * (level - .5) + self.item_height/2))
+				context.rel_line_to((x - siblings[0].x) * self.horizontal_separation, 0)
+				context.stroke()
+		if node.subnodes:
+			context.set_line_width(.8)
+			context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level + self.item_height))
+			context.rel_line_to(0, round(self.vertical_seperation - self.item_height) / 2)
+			context.stroke()
 
 	def renderto(self, output):
 		self.width = (self.tree.maxwidth-1) * self.horizontal_separation + self.item_width + int(self.x_offset * 2)
