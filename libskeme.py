@@ -39,19 +39,30 @@ class ParseError(Exception):
 class Tree(object):
 	def __init__(self, origin):
 		stack = []
+		repetition_stack = []
 		self.maxdepth = 0
 		self.maxwidth = 1
+		self.repetitions = []
 		for line in origin.splitlines():
+			if line == '{':
+				repetition_stack.append(None)
+				continue
+			elif line == '}':
+				self.repetitions.append((repetition_stack.pop(), stack[-1]))
+				continue
 			level = self.getlevel(line)
 			self.maxdepth = max(self.maxdepth, level)
 			if level:
 				newnode = Node(level)
+				if repetition_stack and repetition_stack[-1] is None:
+					repetition_stack[-1] = newnode
 				for i in range(len(stack)-1, -1, -1):
 					if stack[i].level < level: #found parent!
 						if i < len(stack)-1: #stack[i].subnodes:
 							self.maxwidth += 1
 						stack[i].subnodes.append(newnode)
 						newnode.parent = stack[i]
+						newnode.x = self.maxwidth
 						stack = stack[:i+1]
 						break
 				stack.append(newnode)
