@@ -154,7 +154,10 @@ class Renderer(object):
 			context.set_font_size(self.font_size - 2)
 		if node.parent:
 			p = node.parent
-			ex = p.subnodes.index(node) + 1.0
+			siblings = p.subnodes
+			lastinline = len(siblings) > 1 and siblings.index(node) == len(siblings) - 1
+			mustcurve = lastinline and self.curving_line
+			ex = siblings.index(node) + 1.0
 			if node.returns:
 				context.set_line_width(2)
 				context.move_to(round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level))
@@ -163,14 +166,14 @@ class Renderer(object):
 				context.set_line_width(.8)
 				context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level))
 				#context.line_to(.5+round(self.x_offset + self.item_width * ex / (len(p.subnodes)+1) + p.x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * (p.level - 1) + self.item_height))
-			context.rel_line_to(0, -round((self.vertical_seperation - self.item_height) * 4 / 5.0))
+			context.rel_line_to(0, -round((self.vertical_seperation - self.item_height) * 4 / 5.0) + (mustcurve and 10 or 0))
 			context.stroke()
 			context.select_font_face(self.small_font,
 				cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 			context.set_font_size(self.small_font_size)
 			if node.returns:
 				if self.arrows:
-					context.move_to(round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level - (self.vertical_seperation - self.item_height) * 4 / 5.0))
+					context.move_to(round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level - (self.vertical_seperation - self.item_height) * 4 / 5.0) + (mustcurve and 10 or 0))
 					context.rel_line_to(-7, 7)
 					context.rel_line_to(14, 0)
 					context.fill()
@@ -184,8 +187,7 @@ class Renderer(object):
 				x_bearing, y_bearing, width, height = context.text_extents(arg)[:4]
 				context.move_to(round(self.x_offset + self.item_width + x * self.horizontal_separation - x_bearing - width), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 - i * (height + 1) + 1))
 				context.show_text(arg)
-			siblings = node.parent.subnodes
-			if len(siblings) > 1 and siblings.index(node) == len(siblings) - 1:
+			if lastinline:
 				context.set_line_width(.8)
 				context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + siblings[0].x * self.horizontal_separation), .5+round(self.y_offset + self.vertical_seperation * level - (self.vertical_seperation - self.item_height) * 4 / 5.0))
 				if self.curving_line:
