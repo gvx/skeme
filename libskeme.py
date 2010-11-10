@@ -97,7 +97,7 @@ class Renderer(object):
 		self.item_width = 210 #80
 		self.horizontal_separation = self.item_width + 10 #90
 		self.item_height = 35
-		self.vertical_seperation = 100
+		self.vertical_seperation = 120
 		self.x_offset = 6#5.5
 		self.y_offset = 6#5.5
 		self.curving_line = True
@@ -213,6 +213,13 @@ class Renderer(object):
 			context.rel_line_to(0, round(self.vertical_seperation - self.item_height) / 2)
 			context.stroke()
 
+	def drawrepetition(self, start, end):
+		context = self.context
+		context.set_line_width(.8)
+		context.move_to(round(self.x_offset + self.item_width / 4.0 + start.x * self.horizontal_separation), .5+round(self.y_offset + self.vertical_seperation * (start.level - 1) - (self.vertical_seperation - self.item_height) * 4 / 7.0))
+		context.rel_line_to(round(self.x_offset + self.item_width / 2.0 + (end.x - start.x) * self.horizontal_separation), 0)
+		context.stroke()
+
 	def renderto(self, output):
 		self.width = (self.tree.maxwidth-1) * self.horizontal_separation + self.item_width + int(self.x_offset * 2)
 		self.height = (self.tree.maxdepth-1) * self.vertical_seperation + self.item_height + int(self.y_offset * 2)
@@ -228,5 +235,7 @@ class Renderer(object):
 				queue = n.subnodes + queue #depth-first search
 			else:
 				x += 1
+		for start, end in self.tree.repetitions:
+			self.drawrepetition(start, end)
 		self.surface.flush()
 		self.surface.write_to_png(output)
