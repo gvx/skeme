@@ -185,10 +185,11 @@ class Renderer(object):
 				context.move_to(round(self.x_offset + self.item_width + x * self.horizontal_separation - x_bearing - width), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 - i * (height + 1) + 1))
 				context.show_text(arg)
 			siblings = node.parent.subnodes
-			if siblings.index(node) == len(siblings) - 1:
+			if len(siblings) > 1 and siblings.index(node) == len(siblings) - 1:
 				context.set_line_width(.8)
 				context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + siblings[0].x * self.horizontal_separation), .5+round(self.y_offset + self.vertical_seperation * level - (self.vertical_seperation - self.item_height) * 4 / 5.0))
-				context.rel_line_to((x - siblings[0].x) * self.horizontal_separation, 0)
+				context.rel_line_to((x - siblings[0].x) * self.horizontal_separation - 10, 0)
+				context.rel_curve_to(5, 0, 10, 5, 10, 10)
 				context.stroke()
 		if node.subnodes:
 			context.set_line_width(.8)
