@@ -163,14 +163,14 @@ class Renderer(object):
 				context.set_line_width(.8)
 				context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level))
 				#context.line_to(.5+round(self.x_offset + self.item_width * ex / (len(p.subnodes)+1) + p.x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * (p.level - 1) + self.item_height))
-			context.rel_line_to(0, -round(self.vertical_seperation - self.item_height) / 2)
+			context.rel_line_to(0, -round((self.vertical_seperation - self.item_height) * 4 / 5.0))
 			context.stroke()
 			context.select_font_face(self.small_font,
 				cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 			context.set_font_size(self.small_font_size)
 			if node.returns:
 				if self.arrows:
-					context.move_to(round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * (level - .5) + self.item_height/2))
+					context.move_to(round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level - (self.vertical_seperation - self.item_height) * 4 / 5.0))
 					context.rel_line_to(-7, 7)
 					context.rel_line_to(14, 0)
 					context.fill()
@@ -187,7 +187,7 @@ class Renderer(object):
 			siblings = node.parent.subnodes
 			if siblings.index(node) == len(siblings) - 1:
 				context.set_line_width(.8)
-				context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + siblings[0].x * self.horizontal_separation), .5+round(self.y_offset + self.vertical_seperation * (level - .5) + self.item_height/2))
+				context.move_to(.5+round(self.x_offset + self.item_width / 2.0 + siblings[0].x * self.horizontal_separation), .5+round(self.y_offset + self.vertical_seperation * level - (self.vertical_seperation - self.item_height) * 4 / 5.0))
 				context.rel_line_to((x - siblings[0].x) * self.horizontal_separation, 0)
 				context.stroke()
 		if node.subnodes:
