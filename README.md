@@ -29,3 +29,7 @@ and the `sk.layout` file.
 
 Not yet ready. webskeme is a cgi script together with an HTML form. Almost as
 configurable as sk.
+
+## Repetition ##
+Skeme lacked a way to denote repetition, which will be implemented in this
+branch. This part of the README will be removed once the branch is done.
