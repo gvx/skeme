@@ -215,9 +215,22 @@ class Renderer(object):
 
 	def drawrepetition(self, start, end):
 		context = self.context
-		context.set_line_width(.8)
+		context.set_line_width(1.2)
+		context.set_source_rgba(0, 0, .4, .7)
+		context.set_dash([2,1], 0)
 		context.move_to(round(self.x_offset + self.item_width / 4.0 + start.x * self.horizontal_separation), .5+round(self.y_offset + self.vertical_seperation * (start.level - 1) - (self.vertical_seperation - self.item_height) * 4 / 7.0))
 		context.rel_line_to(round(self.x_offset + self.item_width / 2.0 + (end.x - start.x) * self.horizontal_separation), 0)
+		context.rel_curve_to(10, 0, 10, 10, 0, 10)
+		context.rel_line_to(-round(self.x_offset + self.item_width / 2.0 + (end.x - start.x) * self.horizontal_separation), 0)
+		context.rel_curve_to(-10, 0, -10, -10, 0, -10)
+		context.stroke()
+		context.move_to(round(self.x_offset + self.item_width * 3 / 8.0 + start.x * self.horizontal_separation + 5), .5+round(self.y_offset + self.vertical_seperation * (start.level - 1) - (self.vertical_seperation - self.item_height) * 4 / 7.0 + 5))
+		context.rel_line_to(-5, 5)
+		context.rel_line_to(5, 5)
+		context.stroke()
+		context.move_to(round(self.x_offset + self.item_width * 5 / 8.0 + end.x * self.horizontal_separation - 5), .5+round(self.y_offset + self.vertical_seperation * (start.level - 1) - (self.vertical_seperation - self.item_height) * 4 / 7.0 - 5))
+		context.rel_line_to(5, 5)
+		context.rel_line_to(-5, 5)
 		context.stroke()
 
 	def renderto(self, output):
