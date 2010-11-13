@@ -191,7 +191,7 @@ class Renderer(object):
 				x_bearing, y_bearing, width, height = context.text_extents(node.returns)[:4]
 				#l = (x - p.x) * self.horizontal_separation / 10.0
 				#context.move_to(round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation - x_bearing - l - width - 4), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 + 1))
-				context.move_to(round(self.x_offset + x * self.horizontal_separation - x_bearing + 4), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 + 1))
+				context.move_to(round(self.x_offset + x * self.horizontal_separation + self.item_width / 2.0 - width - x_bearing - 4), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 + 1))
 				context.show_text(node.returns)
 			for i, arg in enumerate(node.args):
 				arg = self.type_char[arg[0]] + arg[1]
