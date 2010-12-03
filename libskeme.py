@@ -68,10 +68,11 @@ class Tree(object):
 				stack.append(newnode)
 			for match in _descr.finditer(line):
 				key = match.group(1)
-				if key == 'returns':
+				if key in ('return', 'returns'):
 					stack[-1].returns = match.group(2)
 				elif key in ('in', 'out', 'inout'):
-					stack[-1].args.append(match.groups())
+					for arg in match.group(1).split(','):
+						stack[-1].args.append((key, arg))
 				else:
 					raise ParseError('unrecognized key: '+key)
 			line = _descr.sub('', line)
