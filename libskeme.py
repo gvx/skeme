@@ -71,7 +71,7 @@ class Tree(object):
 				if key in ('return', 'returns'):
 					stack[-1].returns = match.group(2)
 				elif key in ('in', 'out', 'inout'):
-					for arg in match.group(1).split(','):
+					for arg in match.group(2).split(','):
 						stack[-1].args.append((key, arg))
 				else:
 					raise ParseError('unrecognized key: '+key)
