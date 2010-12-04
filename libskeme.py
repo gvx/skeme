@@ -118,7 +118,7 @@ class Renderer(object):
 		#  *      *
 		#  G      D
 		#   F****E
-		
+
 		context = self.context
 
 		context.move_to(x+r,y)                      # Move to A
