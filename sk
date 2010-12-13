@@ -5,11 +5,11 @@ from optparse import OptionParser
 
 parser = OptionParser()
 
-parser.add_option('-a', '--arrow', action='store_true',
-		default=False,
+parser.add_option('-a', '--arrow', action='store_false',
+		default=True,
 		help='Adds arrows for functions with a return value')
-parser.add_option('-c', '--curve', action='store_true',
-		default=False,
+parser.add_option('-c', '--curve', action='store_false',
+		default=True,
 		help='Curves lines pointing to parent functions')
 parser.add_option('-w', '--width', type='int',
 		default=None,
