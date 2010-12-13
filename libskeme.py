@@ -19,6 +19,7 @@ class Node(object):
 		self.text = None
 		self.args = [] # ('in', 'int blah'), ('out', 'x'), ('inout', 'y')
 		self.returns = None
+		self.recurse = False
 		self.parent = None
 	def stringify(self, indent=0):
 		t = self.text.strip()
@@ -70,6 +71,8 @@ class Tree(object):
 				key = match.group(1)
 				if key in ('return', 'returns'):
 					stack[-1].returns = match.group(2)
+				elif key == 'recurse':
+					stack[-1].recurse = match.group(2)
 				elif key in ('in', 'out', 'inout'):
 					for arg in match.group(2).split(','):
 						stack[-1].args.append((key, arg))
@@ -194,6 +197,8 @@ class Renderer(object):
 				#context.move_to(round(self.x_offset + self.item_width / 2.0 + x * self.horizontal_separation - x_bearing - l - width - 4), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 + 1))
 				context.move_to(round(self.x_offset + x * self.horizontal_separation + self.item_width / 2.0 - width - x_bearing - 4), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 + 1))
 				context.show_text(node.returns)
+			if node.recurse:
+				pass
 			for i, arg in enumerate(node.args):
 				arg = self.type_char[arg[0]] + arg[1]
 				x_bearing, y_bearing, width, height = context.text_extents(arg)[:4]
