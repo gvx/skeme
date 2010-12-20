@@ -106,7 +106,7 @@ class Renderer(object):
 		self.y_offset = 6#5.5
 		self.curving_line = True
 		self.arrows = True
-		self.type_char = {'in': u'\u2193', 'out': u'\u2191', 'inout': u'\u2195'}
+		self.type_char = {'in': u'\u2193', 'out': u'\u2191', 'inout': u'\u2195', 'recurse': u'\u21ba '}
 		self.font = 'Serif'
 		self.font_size = 12
 		self.small_font = 'Sans'
@@ -198,7 +198,9 @@ class Renderer(object):
 				context.move_to(round(self.x_offset + x * self.horizontal_separation + self.item_width / 2.0 - width - x_bearing - 4), round(self.y_offset + self.vertical_seperation * level + y_bearing/2 + 1))
 				context.show_text(node.returns)
 			if node.recurse:
-				pass
+				arg = self.type_char['recurse'] + node.recurse
+				context.move_to(round(self.x_offset + self.item_width / 2 + 2 + x * self.horizontal_separation), round(self.y_offset + self.vertical_seperation * level + self.item_height + 10))
+				context.show_text(arg)
 			for i, arg in enumerate(node.args):
 				arg = self.type_char[arg[0]] + arg[1]
 				x_bearing, y_bearing, width, height = context.text_extents(arg)[:4]
